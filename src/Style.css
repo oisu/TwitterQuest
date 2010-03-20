@@ -1,0 +1,106 @@
+/* CSS file */
+/* http://www.hogera.com/pcb/font/ */
+/* ТХЗТТДР ПУДСТ */
+@font-face {
+    fontFamily: dqfont;
+    src:url("assets/dqfont.ttf");
+}
+
+
+VBox
+{
+	border-color: #FFF;
+	border-style: solid;
+	border-thickness: 3;
+	corner-radius: 10;
+	horizontal-align: left;
+	vertical-align: middle;
+	padding-left: 5;
+	padding-right: 5;
+	padding-bottom: 5;
+}
+
+HBox
+{
+	padding-left: 5;
+	padding-right: 5;
+	padding-bottom: 5;
+}
+
+Text
+{
+	color: #FFFFFF;
+	font-family: dqfont;
+	font-size: 24;
+}
+
+TextArea
+{
+	color: #FFF;
+	font-family: dqfont;
+	font-size: 24;
+	border-style: none;
+	background-color: #000;
+}
+TextInput
+{
+	color: #FFF;
+
+	font-family: dqfont;
+	font-size: 24;
+	border-color: #FFF;
+	border-thickness: 1;
+	background-color: #000;
+	background-gradient-colors: #000;
+	background-disabled-color: #000;
+	padding-bottom: 5;
+	padding-left: 5;
+}
+
+Button
+{
+	color: #FFF;
+	font-family: dqfont;
+	font-size: 24;
+	border-style: none;
+	font-weight: normal;
+	padding-bottom: 10;
+	text-roll-over-color: #000;
+	disabled-color: #000;
+	over-skin: ClassReference("pktn.skin.ButtonOverSkin");
+	down-skin: ClassReference("pktn.skin.ButtonDownSkin");
+	up-skin: ClassReference("pktn.skin.ButtonUpSkin");
+	disabled-skin: ClassReference("pktn.skin.ButtonUpSkin");
+}
+
+Alert {
+	titleStyleName: "alertTitle";
+	messageStyleName: "alertMessage";
+	buttonStyleName: "alertButton";
+	color: #FFF;
+	fontFamily: dqfont;
+	dropShadowEnabled: false;
+	backgroundColor: #000;
+	borderStyle: none;
+}
+.alertTitle {
+	letterSpacing: 0;
+	fontSize: 24;
+	color: #FFF;
+	fontWeight: bold;
+	backgroundColor: #000;
+}
+.alertMessage {
+	letterSpacing: 0;
+	color: #FFF;
+	fontSize: 24;
+	fontWeight: normal;
+}
+.alertButton {
+	letterSpacing: 0;
+	paddingBottom: 15;
+	fontSize: 24;
+	cornerRadius: 10;
+	fontWeight: normal;
+	color: #FFF;
+}

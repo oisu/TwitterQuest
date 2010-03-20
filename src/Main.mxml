@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+	layout="horizontal"
+	backgroundColor="#000000"
+	verticalAlign="middle"
+	horizontalAlign="center"
+	width="600" height="600"
+	applicationComplete="init()"
+	>
+
+	<mx:Script source="Main.as" />
+	<mx:Style source="Style.css" />
+
+	<mx:ViewStack id="mainView" backgroundColor="#000000" width="420" height="420" selectedIndex="{scene.activeView}"  creationPolicy="all">
+		<!-- 0. main view -->
+		<mx:VBox borderStyle="none">
+			<mx:VBox height="100" width="100%" id="titleWindow">
+				<mx:Text text="ТХЗТТДР ПУДСТ"  width="100%" textAlign="center"/>
+			</mx:VBox>
+		</mx:VBox>
+		<mx:VBox borderStyle="none">
+			<mx:VBox width="100%" height="100%" verticalAlign="top" verticalGap="0" horizontalAlign="center">
+				<mx:Text id="inputPlayerId01"  width="100%" textAlign="center"/>
+				<mx:Text id="inputPlayerId02"  width="100%" textAlign="center"/>
+				<mx:Spacer width="100%" height="15"/>
+				<mx:HBox verticalAlign="bottom" width="275">
+					<mx:TextInput id="playerNameField" backgroundColor="#000000" restrict="[A-Z][0-9][_]" enter="getPlayerInformation()"/>
+					<mx:Button id="playerNameSendButton" label="けってい　" click="getPlayerInformation()" height="30"/>
+				</mx:HBox>
+				<mx:Spacer width="100%" height="10"/>
+				<mx:VBox id="statusWindow" height="100%" paddingLeft="5" width="275" horizontalScrollPolicy="off">
+					<mx:HBox height="100%" horizontalGap="0">
+						<mx:VBox paddingTop="10" borderStyle="none" height="100%" horizontalScrollPolicy="off">
+							<mx:Image id="statusIconImage" width="48" height="48"/>
+							<mx:TextArea id="statusLeft" height="100%" width="70" />
+						</mx:VBox>
+						<mx:VBox horizontalGap="0" verticalGap="0" borderStyle="none" height="100%">
+							<mx:HBox borderStyle="none" height="100%">
+								<mx:TextArea id="statusRightLabel" height="150" width="100" />
+								<mx:TextArea id="statusRight" height="100%" width="70" />
+							</mx:HBox>
+							<mx:Text id="statusBottom" width="100%" text="Ex:" paddingLeft="5" />
+						</mx:VBox>
+					</mx:HBox>
+				</mx:VBox>
+				<mx:Spacer width="100%" height="10"/>
+				<mx:HBox width="100%" horizontalAlign="right">
+					<mx:Button id="previousWindowButton" label="△　もどる" click="gotoPreviousWindow()"/>
+					<mx:Spacer width="100%" />
+					<mx:Button id="nextWindowButton" label="すすむ　▽" click="gotoNextWindow()"/>
+				</mx:HBox>
+			</mx:VBox>
+		</mx:VBox>
+
+		<!-- 1. battle view -->
+		<mx:VBox borderStyle="none">
+			<mx:VBox width="100%" height="140" verticalGap="0" borderStyle="none">
+					<mx:VBox height="100%" verticalGap="0" width="90">
+						<mx:HBox width="100%">
+							<mx:Text id="name_1p" text="{player.name}" height="25" width="100%"/>
+						</mx:HBox>
+						<mx:HBox width="100%" horizontalGap="4">
+							<mx:Text id="hp_label" text="H" width="15" height="25"/>
+							<mx:Text id="hp_1p" text="{player.hp}" height="25" width="100%" textAlign="right"/>
+						</mx:HBox>
+						<mx:HBox width="100%" horizontalGap="4" >
+							<mx:Text id="mp_label" text="M" width="15" height="25"/>
+							<mx:Text id="mp_1p" text="{player.mp}" height="25" width="100%" textAlign="right"/>
+						</mx:HBox>
+						<mx:HBox width="100%">
+							<mx:Text id="lv_1p" text="{player.job.charAt(0)}" width="100%" height="25"/>
+						</mx:HBox>
+					</mx:VBox>
+			</mx:VBox>
+			<mx:VBox width="100%" height="90" verticalAlign="middle" horizontalAlign="center" borderStyle="none">
+				<mx:Image id="opponentIconImage" width="48" height="48" />
+			</mx:VBox>
+
+			<!-- MAIN WINDOW -->
+			<mx:ViewStack id="mainWindow" selectedIndex="{scene.activeWindow}" width="100%" creationPolicy="all">
+
+				<!-- 1-0. COMMAND WINDOW -->
+				<mx:HBox id="commandWindow">
+					<mx:VBox width="90" height="100%" verticalGap="0">
+							<mx:Text id="attack" text=" たたかう" width="100%" height="25"/>
+							<mx:Text id="runaway" text=" にげる" width="100%" height="25"/>
+							<mx:Text id="guard" text=" ぼうぎょ" width="100%" height="25"/>
+							<mx:Text id="item" text=" どうぐ" width="100%" height="25"/>
+					</mx:VBox>
+					<mx:HBox width="100%" height="120" horizontalAlign="left">
+						<mx:HBox id="targetWindow" width="90%" horizontalGap="0" borderStyle="solid" borderThickness="3" cornerRadius="10" borderColor="#FFFFFF">
+							<mx:Text id="targetCursol" text="▽" height="40" visible="false"/>
+							<mx:Text id="targetText" text="{opponent.fullName}" width="100%" height="40"/>
+							<mx:Text text="―　１ぴき　" width="100%" height="40" textAlign="right"/>
+						</mx:HBox>
+					</mx:HBox>
+				</mx:HBox>
+
+				<!-- 1-1. MESSAGE WINDOW -->
+				<mx:HBox id="messageWindow" width="100%">
+					<mx:VBox width="100%" height="120" verticalGap="0">
+						<mx:Text id="messageText" width="100%" height="100%"/>
+						<mx:Text id="messageTextCursol" text="▼" width="100%" height="25" textAlign="center" visible="false"/>
+					</mx:VBox>
+				</mx:HBox>
+			</mx:ViewStack>
+
+			<!-- mx:HBox>
+				< mx:Button label="init" click="init()" />
+				<mx:Button label="request" click="tw.getRequestToken()" />
+				<mx:Button label="access" click="tw.getAccessToken()" />
+				<mx:Button label="getuser" click="getUserInformation('pktn')" />
+			</mx:HBox -->
+
+		</mx:VBox>
+	</mx:ViewStack>
+
+</mx:Application>
