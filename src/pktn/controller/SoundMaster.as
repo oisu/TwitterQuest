@@ -28,11 +28,16 @@ package pktn.controller
 
 			_opponentAttack.load(new URLRequest("assets/opponent_attack.mp3"));
 			_playerAttack.load(new URLRequest("assets/player_attack.mp3"));
+			_playerHit.load(new URLRequest("assets/opponent_hit.mp3"));
 			_opponentHit.load(new URLRequest("assets/opponent_hit.mp3"));
 			_select.load(new URLRequest("assets/select.mp3"));
 			_decide.load(new URLRequest("assets/decide.mp3"));
 		}
 
+		public function playSoundPlayerHit():void
+		{
+			_channel = _playerHit.play();
+		}
 		public function playSoundOpponentHit():void
 		{
 			_channel = _opponentHit.play();

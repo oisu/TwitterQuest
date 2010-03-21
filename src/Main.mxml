@@ -6,6 +6,7 @@
 	horizontalAlign="center"
 	width="600" height="600"
 	applicationComplete="init()"
+	pageTitle="Twitter Quest β"
 	>
 
 	<mx:Script source="Main.as" />
@@ -24,8 +25,8 @@
 				<mx:Text id="inputPlayerId02"  width="100%" textAlign="center"/>
 				<mx:Spacer width="100%" height="15"/>
 				<mx:HBox verticalAlign="bottom" width="275">
-					<mx:TextInput id="playerNameField" backgroundColor="#000000" restrict="[A-Z][0-9][_]" enter="getPlayerInformation()"/>
-					<mx:Button id="playerNameSendButton" label="けってい　" click="getPlayerInformation()" height="30"/>
+					<mx:TextInput id="playerNameField" backgroundColor="#000000" restrict="[A-Z][0-9][_]" maxChars="15" enter="getPlayerInformation()"/>
+					<mx:Button id="playerNameSendButton" label="けってい" click="getPlayerInformation()" height="30" width="95" textAlign="center"/>
 				</mx:HBox>
 				<mx:Spacer width="100%" height="10"/>
 				<mx:VBox id="statusWindow" height="100%" paddingLeft="5" width="275" horizontalScrollPolicy="off">
@@ -47,7 +48,7 @@
 				<mx:HBox width="100%" horizontalAlign="right">
 					<mx:Button id="previousWindowButton" label="△　もどる" click="gotoPreviousWindow()"/>
 					<mx:Spacer width="100%" />
-					<mx:Button id="nextWindowButton" label="すすむ　▽" click="gotoNextWindow()"/>
+					<mx:Button id="nextWindowButton" label="すすむ　▽" click="gotoNextWindow()" keyDown="gotoNextWindow()"/>
 				</mx:HBox>
 			</mx:VBox>
 		</mx:VBox>
@@ -55,7 +56,7 @@
 		<!-- 1. battle view -->
 		<mx:VBox borderStyle="none">
 			<mx:VBox width="100%" height="140" verticalGap="0" borderStyle="none">
-					<mx:VBox height="100%" verticalGap="0" width="90">
+					<mx:VBox id="statusVBox" height="100%" verticalGap="0" width="90">
 						<mx:HBox width="100%">
 							<mx:Text id="name_1p" text="{player.name}" height="25" width="100%"/>
 						</mx:HBox>
@@ -81,36 +82,46 @@
 
 				<!-- 1-0. COMMAND WINDOW -->
 				<mx:HBox id="commandWindow">
-					<mx:VBox width="90" height="100%" verticalGap="0">
-							<mx:Text id="attack" text=" たたかう" width="100%" height="25"/>
-							<mx:Text id="runaway" text=" にげる" width="100%" height="25"/>
-							<mx:Text id="guard" text=" ぼうぎょ" width="100%" height="25"/>
-							<mx:Text id="item" text=" どうぐ" width="100%" height="25"/>
+					<mx:VBox id="commandVBox" width="90" height="100%" verticalGap="0" styleName="paddingZero">
+
+						<mx:HBox id="attackCommand" horizontalGap="0" styleName="paddingZero">
+							<mx:Text id="attackCommandCursol" name="Cursol" text="▽" height="25" styleName="paddingZero"/>
+							<mx:Text id="attackCommandText" text="たたかう" width="100%" height="25" styleName="paddingZero"/>
+						</mx:HBox>
+
+						<mx:HBox id="spellCommand" horizontalGap="0" styleName="paddingZero">
+							<mx:Text id="spellCommandCursol" name="Cursol" text=" " height="25" styleName="paddingZero" visible="false"/>
+							<mx:Text id="spellCommandText" text="じゅもん" width="100%" height="25" styleName="paddingZero"/>
+						</mx:HBox>
+
+						<mx:HBox id="guardCommand" horizontalGap="0" styleName="paddingZero">
+							<mx:Text id="guardCommandCursol" name="Cursol" text=" " height="25" styleName="paddingZero" visible="false"/>
+							<mx:Text id="guardCommandText" text="ぼうぎょ" width="100%" height="25" styleName="paddingZero"/>
+						</mx:HBox>
+
+						<mx:HBox id="itemCommand" horizontalGap="0" styleName="paddingZero">
+							<mx:Text id="itemCommandCursol" name="Cursol" text=" " height="25" styleName="paddingZero" visible="false"/>
+							<mx:Text id="itemCommandText" text="どうぐ" width="100%" height="25" styleName="paddingZero"/>
+						</mx:HBox>
+
 					</mx:VBox>
 					<mx:HBox width="100%" height="120" horizontalAlign="left">
 						<mx:HBox id="targetWindow" width="90%" horizontalGap="0" borderStyle="solid" borderThickness="3" cornerRadius="10" borderColor="#FFFFFF">
 							<mx:Text id="targetCursol" text="▽" height="40" visible="false"/>
-							<mx:Text id="targetText" text="{opponent.fullName}" width="100%" height="40"/>
-							<mx:Text text="―　１ぴき　" width="100%" height="40" textAlign="right"/>
+							<mx:Text id="targetText" text="{opponent.upperFullName.toUpperCase()}" width="100%" height="40" selectable="false"/>
+							<mx:Text id="targetCountText" text="―　１ぴき　" width="100%" height="40" textAlign="right"/>
 						</mx:HBox>
 					</mx:HBox>
 				</mx:HBox>
 
 				<!-- 1-1. MESSAGE WINDOW -->
-				<mx:HBox id="messageWindow" width="100%">
-					<mx:VBox width="100%" height="120" verticalGap="0">
+				<mx:HBox width="100%">
+					<mx:VBox id="messageWindow" width="100%" height="120" verticalGap="0">
 						<mx:Text id="messageText" width="100%" height="100%"/>
 						<mx:Text id="messageTextCursol" text="▼" width="100%" height="25" textAlign="center" visible="false"/>
 					</mx:VBox>
 				</mx:HBox>
 			</mx:ViewStack>
-
-			<!-- mx:HBox>
-				< mx:Button label="init" click="init()" />
-				<mx:Button label="request" click="tw.getRequestToken()" />
-				<mx:Button label="access" click="tw.getAccessToken()" />
-				<mx:Button label="getuser" click="getUserInformation('pktn')" />
-			</mx:HBox -->
 
 		</mx:VBox>
 	</mx:ViewStack>

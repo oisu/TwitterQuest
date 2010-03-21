@@ -17,7 +17,13 @@ package pktn.twitter
 			var player:PlayerModel = new PlayerModel;
 
 			player.name = user.screen_name;
+			player.upperFullName = user.screen_name;
 			player.fullName = user.screen_name;
+
+			// 'koushiroubot' -> 'KOUS'
+			player.name = player.name.substring(0,4).toUpperCase();
+			// 'koushiroubot' -> 'KOUSHIROUBOT'
+			player.upperFullName = player.upperFullName.toUpperCase();
 
 			player.hp = user.statuses_count * 0.1;
 			player.mp = user.favourites_count;
@@ -25,23 +31,28 @@ package pktn.twitter
 			player.defence = user.followers_count * 0.1;
 			player.agility = user.followers_count * 0.05;
 			player.icon = user.profile_image_url;
-			player.ex = user.statuses_count * 2 + user.followers_count * 15 + user.friends_count * 10 + user.favourites_count * 100;
+
+			player.ex = user.statuses_count * 2 +
+								user.followers_count * 15 +
+								user.friends_count * 10 +
+								user.favourites_count * 100;
 
 			player.job = "ニート";
 			player.lv = player.ex * 0.001;
-
-			// 'koushiroubot' -> 'KOUS'
-			player.name = player.name.substring(0,4).toUpperCase();
-			player.fullName = player.name.toUpperCase();
 
 			player.hp = Math.min(player.hp, 255);
 			player.hp = Math.max(player.hp, 30);
 			player.mp = Math.min(player.mp, 255);
 			player.mp = Math.max(player.mp, 0);
+
+			player.maxHp = player.hp;
+			player.maxMp = player.mp;
+
 			player.offence = Math.min(player.offence, 255);
 			player.offence = Math.max(player.offence, 10);
 			player.defence = Math.min(player.defence, 255);
 			player.defence = Math.max(player.defence, 10);
+
 			player.agility = Math.min(player.agility, 255);
 			player.agility = Math.max(player.agility, 5);
 

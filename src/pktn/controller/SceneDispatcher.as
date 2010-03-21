@@ -42,6 +42,5 @@ package pktn.controller
 		{
 			activeWindow = MESSAGE_WINDOW;
 		}
-
 	}
 }

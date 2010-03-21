@@ -17,8 +17,12 @@ package pktn.model
 		[Bindable]
 		public var job:String;
 		[Bindable]
+		public var upperFullName:String;
+
 		public var fullName:String;
 
+		public var maxHp:int;
+		public var maxMp:int;
 		public var offence:int;
 		public var defence:int;
 		public var agility:int;
@@ -35,6 +39,8 @@ package pktn.model
 			this.lv = INITIAL_VALUE;
 			this.name = "";
 
+			this.maxHp = INITIAL_VALUE;
+			this.maxMp = INITIAL_VALUE;
 			this.hp = INITIAL_VALUE;
 			this.mp = INITIAL_VALUE;
 			this.offence = INITIAL_VALUE;
@@ -48,78 +54,5 @@ package pktn.model
 			this.icon = "";
 			this.queuing = false;
 		}
-
-//		public function set lv(i:int):void
-//		{
-//			_lv = i;
-//		}
-//		public function get lv():int
-//		{
-//			return _lv;
-//		}
-//		public function set name(s:String):void
-//		{
-//			_name = s;
-//		}
-//		public function get name():String
-//		{
-//			return _name;
-//		}
-//		public function set hp(i:int):void
-//		{
-//			_hp = i;
-//		}
-//		public function get hp():int
-//		{
-//			return _hp;
-//		}
-//		public function set mp(i:int):void
-//		{
-//			_mp = i;
-//		}
-//		public function get mp():int
-//		{
-//			return _mp;
-//		}
-//		public function set offence(i:int):void
-//		{
-//			_offence = i;
-//		}
-//		public function get offence():int
-//		{
-//			return _offence;
-//		}
-//		public function set defence(i:int):void
-//		{
-//			_defence = i;
-//		}
-//		public function get defence():int
-//		{
-//			return _defence;
-//		}
-//		public function set agility(i:int):void
-//		{
-//			_agility = i;
-//		}
-//		public function get agility():int
-//		{
-//			return _agility;
-//		}
-//		public function set luck(i:int):void
-//		{
-//			_luck = i;
-//		}
-//		public function get luck():int
-//		{
-//			return _luck;
-//		}
-//		public function set icon(i:String):void
-//		{
-//			_icon = i;
-//		}
-//		public function get icon():String
-//		{
-//			return _icon;
-//		}
 	}
 }
