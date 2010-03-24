@@ -10,6 +10,9 @@ package pktn.battle
 		private var _opponent:PlayerModel;
 		private var _turnCount:int;
 
+		private var _isCritical:Boolean;
+		private var _isAvoidable:Boolean;
+
 		private var _commandStatus:int;
 
 		private const ST_COMMAND:int = 0;
@@ -20,12 +23,12 @@ package pktn.battle
 		private const ST_OPPONENT_HIT:int = 22;
 		private const ST_PLAYER_MISS:int = 13;
 		private const ST_OPPONENT_MISS:int = 23;
+
 		private const ST_MESSAGE_END:int = 31;
 		private const ST_PLAYER_DIED:int = 41;
 		private const ST_OPPONENT_DIED:int = 49;
-		private const ST_GAME_OVER:int = 99;
-
-		private const MAX_TURN_COUNT:int = 10;
+		private const ST_GAME_OVER:int = 98;
+		private const ST_GAME_END:int = 99;
 
 		/**
 		 * constructor
@@ -37,7 +40,9 @@ package pktn.battle
 			_opponent = q.opponent;
 
 			_commandStatus = ST_COMMAND;
-			// TODO LANG化
+			_isCritical = false;
+			_isAvoidable = false;
+
 			q.echo(_opponent.upperFullName + "が　あらわれた！");
 		}
 
@@ -48,6 +53,7 @@ package pktn.battle
 		{
 			switch (_commandStatus)
 			{
+
 				// last player turn -> command
 				case ST_LAST_PLAYER_TURN:
 					q.scene.showCommandWindow();
@@ -86,7 +92,6 @@ package pktn.battle
 
 				// first player turn -> attack
 				case ST_PLAYER_ATTACK:
-					// TODO 回避判定
 					attack(_player, _opponent);
 					_commandStatus = ST_PLAYER_HIT;
 					break;
@@ -132,15 +137,31 @@ package pktn.battle
 				case ST_GAME_OVER:
 					gameOver();
 					break;
+
+				// game stop
+				case ST_GAME_END:
+					break;
 			}
 			checkEOT();
 		}
 
 		private function attack(offencive:PlayerModel, defencive:PlayerModel):void
 		{
-			q.echo(offencive.upperFullName + "の　こうげき！　");
 			q.battleResult = "";
-			q.battleResult = offencive.upperFullName + "の　こうげき！　";
+			q.echo(offencive.upperFullName + "の　こうげき！　");
+
+			// check avoidance
+			var avoidPossiblity:int = (defencive.agility - offencive.agility) * 0.5;
+			avoidPossiblity = Math.max(avoidPossiblity, 0);
+
+			if (Math.round(Math.random() * 255 + 0.5) > avoidPossiblity)
+			{
+				_isAvoidable = false;
+			}
+			else
+			{
+				_isAvoidable = true;
+			}
 
 			// player attack
 			if (offencive.upperFullName == _player.upperFullName)
@@ -150,45 +171,91 @@ package pktn.battle
 			else
 			{
 			}
-			// TODO 回避判定
-			//miss(offencive, defencive);
 		}
 
 		private function hit(offencive:PlayerModel, defencive:PlayerModel):void
 		{
-			var damage:int = 0;
-			damage = offencive.offence * 0.5 - defencive.defence * 0.25;
-			damage += 1/3 * damage * (Math.random() - 1/6);
-
-			if (damage > defencive.hp) {
-				defencive.hp = 0;
-			}
-			else
+			// dont estimate damage if avoidable
+			if (!_isAvoidable)
 			{
-				defencive.hp -= damage;
+				var damage:int = 0;
+
+				damage = offencive.offence * 0.5 - defencive.defence * 0.25;
+				damage += 1/3 * damage * (Math.random() - 1/6);
+
+				if (Math.round(Math.random () * 15 + 0.5) == 15)
+				{
+					_isCritical = true;
+					damage *= 2;
+				}
+
+				if (damage > defencive.hp)
+				{
+					defencive.hp = 0;
+				}
+				else if (damage < 0)
+				{
+					damage = 0;
+				}
+				else
+				{
+					defencive.hp -= damage;
+				}
 			}
 
+			if (damage == 0)
+			{
+				q.echo("ミス！　" + defencive.upperFullName + "に　ダメージをあたえられない！　");
+			}
 			// player hit
-			if (offencive.upperFullName == _player.upperFullName)
+			else if (offencive.upperFullName == _player.upperFullName)
 			{
-				q.fadeImage.play(null, true);
-				q.echo(defencive.upperFullName + "に　" + damage + "のダメージ！　");
-				q.battleResult += defencive.upperFullName + "に　" + damage + "のダメージ！　";
-				//q.sm.playSoundPlayerHit();
+				if (!_isAvoidable)
+				{
+					if (_isCritical)
+					{
+						q.fadeImage.play(null, true);
+						q.echo("かいしんのいちげき！　" + defencive.upperFullName + "に　" + damage + "のダメージ！　");
+						//q.sm.playSoundPlayerHit();
+						_isCritical = false;
+					}
+					else
+					{
+						q.fadeImage.play(null, true);
+						q.echo(defencive.upperFullName + "に　" + damage + "のダメージ！　");
+						//q.sm.playSoundPlayerHit();
+					}
+				}
+				else
+				{
+					q.echo(defencive.upperFullName + "は　ひらりと　みをかわした！");
+					_isAvoidable = false;
+				}
 			}
 			// opponent hit
 			else
 			{
-				q.shake();
-				q.echo(defencive.upperFullName + "は　" + damage + "のダメージを　うけた！　");
-				q.battleResult += defencive.upperFullName + "は　" + damage + "のダメージを　うけた！　";
-				//q.sm.playSoundOpponentHit();
+				if (!_isAvoidable)
+				{
+					if (_isCritical)
+					{
+						q.shake();
+						q.echo("つうこんのいちげき！　" + defencive.upperFullName + "は　" + damage + "のダメージを　うけた！　");
+						//q.sm.playSoundOpponentHit();
+					}
+					else
+					{
+						q.shake();
+						q.echo(defencive.upperFullName + "は　" + damage + "のダメージを　うけた！　");
+						//q.sm.playSoundOpponentHit();
+					}
+				}
+				else
+				{
+					q.echo(offencive.upperFullName + "は　ひらりと　みをかわした！");
+					_isAvoidable = false;
+				}
 			}
-		}
-
-		private function miss(offencive:PlayerModel, defencive:PlayerModel):void
-		{
-			q.echo(defencive.upperFullName + "は　ひらりと　みをかわした！");
 		}
 
 		private function checkEOT():void
@@ -197,11 +264,11 @@ package pktn.battle
 			{
 				q.changeColor("#FF7763");
 			}
-			if (_player.hp == 0 && _commandStatus != ST_GAME_OVER)
+			if (_player.hp == 0 && _commandStatus != ST_GAME_OVER && _commandStatus != ST_GAME_END)
 			{
 				_commandStatus = ST_PLAYER_DIED;
 			}
-			else if (_opponent.hp == 0 && _commandStatus != ST_GAME_OVER)
+			else if (_opponent.hp == 0 && _commandStatus != ST_GAME_OVER && _commandStatus != ST_GAME_END)
 			{
 				_commandStatus = ST_OPPONENT_DIED;
 			}
@@ -211,7 +278,6 @@ package pktn.battle
 		{
 			q.scene.showMessageWindow();
 			q.echo(_player.upperFullName + "は　しんでしまった・・・");
-			q.battleResult += _player.upperFullName + "は　しんでしまった・・・";
 			_commandStatus = ST_GAME_OVER;
 		}
 		private function opponentDied():void
@@ -219,13 +285,13 @@ package pktn.battle
 			q.scene.showMessageWindow();
 			q.echo(_opponent.upperFullName + "を　やっつけた！");
 			q.opponentIconImage.visible = false;
-			q.battleResult += _opponent.upperFullName + "を　やっつけた！";
 			_commandStatus = ST_GAME_OVER;
 		}
 
 		private function gameOver():void
 		{
 			q.showDialog("たたかいの　けっかを　つぶやきますか？", true);
+			_commandStatus = ST_GAME_END;
 		}
 	}
 }

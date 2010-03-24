@@ -4,7 +4,7 @@
 	backgroundColor="#000000"
 	verticalAlign="middle"
 	horizontalAlign="center"
-	width="600" height="600"
+	width="500" height="500"
 	applicationComplete="init()"
 	pageTitle="Twitter Quest β"
 	>
@@ -12,7 +12,7 @@
 	<mx:Script source="Main.as" />
 	<mx:Style source="Style.css" />
 
-	<mx:ViewStack id="mainView" backgroundColor="#000000" width="420" height="420" selectedIndex="{scene.activeView}"  creationPolicy="all">
+	<mx:ViewStack id="mainView" backgroundColor="#000000" width="440" height="440" selectedIndex="{scene.activeView}"  creationPolicy="all">
 		<!-- 0. main view -->
 		<mx:VBox borderStyle="none">
 			<mx:VBox height="100" width="100%" id="titleWindow">
@@ -23,32 +23,34 @@
 			<mx:VBox width="100%" height="100%" verticalAlign="top" verticalGap="0" horizontalAlign="center">
 				<mx:Text id="inputPlayerId01"  width="100%" textAlign="center"/>
 				<mx:Text id="inputPlayerId02"  width="100%" textAlign="center"/>
-				<mx:Spacer width="100%" height="15"/>
-				<mx:HBox verticalAlign="bottom" width="275">
-					<mx:TextInput id="playerNameField" backgroundColor="#000000" restrict="[A-Z][0-9][_]" maxChars="15" enter="getPlayerInformation()"/>
-					<mx:Button id="playerNameSendButton" label="けってい" click="getPlayerInformation()" height="30" width="95" textAlign="center"/>
+				<mx:Spacer width="100%" height="20"/>
+				<mx:HBox verticalAlign="bottom" width="310">
+					<mx:TextInput id="playerNameField" backgroundColor="#000000" restrict="[A-Z][0-9][_]" maxChars="15" enter="getPlayerInformation()" width="190"/>
+					<mx:Button id="playerNameSendButton" label="けってい" click="getPlayerInformation()" height="30" width="90" textAlign="center"/>
 				</mx:HBox>
-				<mx:Spacer width="100%" height="10"/>
-				<mx:VBox id="statusWindow" height="100%" paddingLeft="5" width="275" horizontalScrollPolicy="off">
-					<mx:HBox height="100%" horizontalGap="0">
-						<mx:VBox paddingTop="10" borderStyle="none" height="100%" horizontalScrollPolicy="off">
+				<mx:Spacer width="100%" height="20"/>
+				<mx:VBox id="statusWindow" height="100%" paddingLeft="5" width="305" horizontalScrollPolicy="off" verticalAlign="top">
+					<mx:HBox height="100%" horizontalGap="0" styleName="paddingZero">
+						<mx:VBox paddingTop="10" borderStyle="none" height="100%" horizontalScrollPolicy="off" verticalAlign="top">
 							<mx:Image id="statusIconImage" width="48" height="48"/>
-							<mx:TextArea id="statusLeft" height="100%" width="70" />
+							<mx:TextArea id="statusLeft" height="100%" selectable="false" width="105"/>
 						</mx:VBox>
-						<mx:VBox horizontalGap="0" verticalGap="0" borderStyle="none" height="100%">
-							<mx:HBox borderStyle="none" height="100%">
-								<mx:TextArea id="statusRightLabel" height="150" width="100" />
-								<mx:TextArea id="statusRight" height="100%" width="70" />
+						<mx:VBox horizontalGap="0" verticalGap="0" borderStyle="none" height="100%" styleName="paddingZero" verticalAlign="top">
+							<mx:HBox borderStyle="none">
+								<mx:TextArea id="statusRightLabel" height="150" width="100" selectable="false"/>
+								<mx:TextArea id="statusRight" height="100%" width="70" selectable="false" />
 							</mx:HBox>
-							<mx:Text id="statusBottom" width="100%" text="Ex:" paddingLeft="5" />
+							<mx:Text id="statusBottom" width="100%" paddingLeft="5" selectable="false"/>
 						</mx:VBox>
 					</mx:HBox>
 				</mx:VBox>
-				<mx:Spacer width="100%" height="10"/>
-				<mx:HBox width="100%" horizontalAlign="right">
-					<mx:Button id="previousWindowButton" label="△　もどる" click="gotoPreviousWindow()"/>
+				<mx:Spacer width="100%" height="20"/>
+				<mx:HBox width="100%" horizontalAlign="right" verticalAlign="bottom">
+					<mx:Button id="previousWindowButton" label="△　もどる" click="gotoPreviousWindow()" labelPlacement="bottom"/>
+					<mx:Spacer width="30"/>
+					<mx:Button id="monsterButton" label="モンスターせんたく" click="getMonster()" labelPlacement="bottom"/>
 					<mx:Spacer width="100%" />
-					<mx:Button id="nextWindowButton" label="すすむ　▽" click="gotoNextWindow()" keyDown="gotoNextWindow()"/>
+					<mx:Button id="nextWindowButton" label="すすむ　▽" click="gotoNextWindow()" keyDown="gotoNextWindow()" labelPlacement="bottom"/>
 				</mx:HBox>
 			</mx:VBox>
 		</mx:VBox>
@@ -68,8 +70,9 @@
 							<mx:Text id="mp_label" text="M" width="15" height="25"/>
 							<mx:Text id="mp_1p" text="{player.mp}" height="25" width="100%" textAlign="right"/>
 						</mx:HBox>
-						<mx:HBox width="100%">
-							<mx:Text id="lv_1p" text="{player.job.charAt(0)}" width="100%" height="25"/>
+						<mx:HBox width="100%" horizontalGap="4">
+							<mx:Text id="lv_label" text="{player.jobAndColon}" width="30" height="25"/>
+							<mx:Text id="lv_1p" text="{player.lv}" width="30" height="25"/>
 						</mx:HBox>
 					</mx:VBox>
 			</mx:VBox>
@@ -82,7 +85,7 @@
 
 				<!-- 1-0. COMMAND WINDOW -->
 				<mx:HBox id="commandWindow">
-					<mx:VBox id="commandVBox" width="90" height="100%" verticalGap="0" styleName="paddingZero">
+					<mx:VBox id="commandVBox" width="90" height="100%" verticalGap="0" verticalAlign="top" styleName="paddingZero">
 
 						<mx:HBox id="attackCommand" horizontalGap="0" styleName="paddingZero">
 							<mx:Text id="attackCommandCursol" name="Cursol" text="▽" height="25" styleName="paddingZero"/>

@@ -68,9 +68,12 @@
 		scene = new SceneDispatcher();
 		sm = new SoundMaster();
 		showTitleWindow();
+
+		player = null;
+		opponent = null;
+
 		initStatusView();
 
-		player = opponent = null;
 		tw = new TwitterFacade();
 		urlLoader = new URLLoader();
 		loader = new Loader();
@@ -84,6 +87,7 @@
 		spellCommand.addEventListener(MouseEvent.MOUSE_OVER, commandOverHandler);
 		guardCommand.addEventListener(MouseEvent.MOUSE_OVER, commandOverHandler);
 		itemCommand.addEventListener(MouseEvent.MOUSE_OVER, commandOverHandler);
+		stage.addEventListener(KeyboardEvent.KEY_DOWN, enterKeyDownHandler);
 	}
 
 	/**
@@ -112,13 +116,9 @@
 		}
 		else if (opponent == null)
 		{
-			playerNameField.text = "";
 			inputPlayerId01.text = Config.STRING_INPUT_OPPONENT_ID_01;
 			inputPlayerId02.text = Config.STRING_INPUT_OPPONENT_ID_02;
 			enableComponent(previousWindowButton);
-		}
-		else
-		{
 		}
 
 		playerNameSendButton.label = "けってい";
@@ -127,12 +127,11 @@
 
 		enableComponent(playerNameSendButton);
 		disableComponent(nextWindowButton);
+		disableComponent(monsterButton);
 
 		statusIconImage.load(Config.DEFAULT_ICON_URL);
 
 		setStatusHtml();
-
-		playerNameField.setFocus();
 	}
 
 	public function getPlayerInformation():void
@@ -212,6 +211,17 @@
 
 		}
 	}
+	public function getMonster():void
+	{
+		sm.playSoundDecide();
+
+		enableComponent(nextWindowButton);
+		nextWindowButton.setFocus();
+		opponent = Config.getAnyMonster();
+		statusIconImage.load(opponent.icon);
+		opponentIconImage.load(opponent.icon);
+		setStatusHtml(opponent);
+	}
 
 	public function startBattle():void
 	{
@@ -233,7 +243,7 @@
 
 		currentCommand = ATTACK_COMMAND;
 		opponentIconImage.visible = true;
-
+		messageWindow.setFocus();
 	}
 
 	/**
@@ -261,6 +271,7 @@
 			if (player != null && opponent != null)
 			{
 				scene.gotoBattle();
+				scene.showMessageWindow();
 				startBattle();
 			}
 			else
@@ -272,6 +283,7 @@
 			sm.playSoundDecide();
 			playerNameField.enabled = true;
 
+			enableComponent(monsterButton);
 			enableComponent(playerNameSendButton);
 			disableComponent(nextWindowButton);
 
@@ -290,17 +302,15 @@
 		enableComponent(playerNameSendButton);
 		enableComponent(nextWindowButton);
 		disableComponent(previousWindowButton);
+		disableComponent(monsterButton);
 
 		this.statusIconImage.load(player.icon);
 		setStatusHtml(player);
 
-		playerNameField.setFocus();
-
 		inputPlayerId01.text = Config.STRING_INPUT_PLAYER_ID_01;
 		inputPlayerId02.text = Config.STRING_INPUT_PLAYER_ID_02;
 
-		textInputEnterKeyLock = false;
-
+		textInputEnterKeyLock = true;
 	}
 
 	public function showDialog(s:String, isYesNo:Boolean=false):void
@@ -328,11 +338,14 @@
 					var replaceStr:String = "@" + player.fullName;
 					battleResult = battleResult.replace(targetReg, replaceStr);
 
-					targetReg = new RegExp(opponent.upperFullName, "g");
-					replaceStr = "@" + opponent.fullName;
-					battleResult = battleResult.replace(targetReg, replaceStr);
+					if (!opponent.isMonster)
+					{
+						targetReg = new RegExp(opponent.upperFullName, "g");
+						replaceStr = "@" + opponent.fullName;
+						battleResult = battleResult.replace(targetReg, replaceStr);
+					}
 
-					uv.status = "《" + battleResult + "》　Twitter Quest β  -  http://bit.ly/twitterquest";
+					uv.status = "《" + battleResult + "》　Twitter Quest β - http://bit.ly/TwitterQuest #twqt";
 					url.data = uv;
 					navigateToURL(url, "_blank");
 				}
@@ -353,6 +366,7 @@
 			statusLeft.htmlText = Config.DEFAULT_LEFT_STATUS;
 			statusRightLabel.htmlText = Config.DEFAULT_RIGHT_STATUS_LABEL;
 			statusRight.htmlText = Config.DEFAULT_RIGHT_STATUS;
+			statusBottom.htmlText = Config.DEFAULT_BOTTOM_STATUS;
 		}
 		else
 		{
@@ -388,7 +402,17 @@
 				break;
 		}
 	}
-
+	public function enterKeyDownHandler(e:KeyboardEvent):void
+	{
+		if ( e.keyCode == Keyboard.ENTER && scene.isBattleView())
+		{
+			battle.step();
+		}
+		else if (e.keyCode != Keyboard.ENTER && scene.isStatusView())
+		{
+			playerNameField.setFocus();
+		}
+	}
 	public function commandOverHandler(e:MouseEvent):void
 	{
 		resetCommands();
@@ -468,6 +492,7 @@
 		hp_1p.setStyle("color",color);
 		mp_label.setStyle("color",color);
 		mp_1p.setStyle("color",color);
+		lv_label.setStyle("color",color);
 		lv_1p.setStyle("color",color);
 		attackCommandText.setStyle("color",color);
 		attackCommandCursol.setStyle("color",color);
@@ -497,16 +522,20 @@
 		msgTimer.addEventListener(TimerEvent.TIMER, type);
 		msgTimer.addEventListener(TimerEvent.TIMER_COMPLETE, unlockEcho);
 		msgTimer.start();
+
+		battleResult += s;
 	}
 	public function lockEcho():void
 	{
 		messageTextCursol.visible = false;
 		curTimer.stop();
 		messageWindow.removeEventListener(MouseEvent.CLICK, mouseDownHandler);
+		stage.removeEventListener(KeyboardEvent.KEY_DOWN, enterKeyDownHandler);
 	}
 	public function unlockEcho(e:Event):void
 	{
 		messageTextCursol.visible = true;
 		curTimer.start();
 		messageWindow.addEventListener(MouseEvent.CLICK, mouseDownHandler);
+		stage.addEventListener(KeyboardEvent.KEY_DOWN, enterKeyDownHandler);
 	}

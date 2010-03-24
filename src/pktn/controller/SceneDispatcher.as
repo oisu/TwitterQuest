@@ -9,9 +9,9 @@ package pktn.controller
 		[Bindable]
 		public var activeWindow:int;
 
-		private const TITLE_VIEW:int = 0;
-		private const STATUS_VIEW:int = 1;
-		private const BATTLE_VIEW:int = 2;
+		public const TITLE_VIEW:int = 0;
+		public const STATUS_VIEW:int = 1;
+		public const BATTLE_VIEW:int = 2;
 
 		private const COMMAND_WINDOW:int = 0;
 		private const MESSAGE_WINDOW:int = 1;
@@ -41,6 +41,22 @@ package pktn.controller
 		public function showMessageWindow(evt:Event=null):void
 		{
 			activeWindow = MESSAGE_WINDOW;
+		}
+		public function isBattleView():Boolean
+		{
+			if (activeView == BATTLE_VIEW)
+			{
+				return true;
+			}
+			return false;
+		}
+		public function isStatusView():Boolean
+		{
+			if (activeView == STATUS_VIEW)
+			{
+				return true;
+			}
+			return false;
 		}
 	}
 }

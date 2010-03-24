@@ -17,6 +17,8 @@ package pktn.model
 		[Bindable]
 		public var job:String;
 		[Bindable]
+		public var jobAndColon:String;
+		[Bindable]
 		public var upperFullName:String;
 
 		public var fullName:String;
@@ -26,9 +28,10 @@ package pktn.model
 		public var offence:int;
 		public var defence:int;
 		public var agility:int;
-		public var intelligence:int;
-		public var luck:int;
+		public var type:String;
 		public var ex:int;
+
+		public var isMonster:Boolean;
 
 		public var icon:String;
 
@@ -46,13 +49,14 @@ package pktn.model
 			this.offence = INITIAL_VALUE;
 			this.defence = INITIAL_VALUE;
 			this.agility = INITIAL_VALUE;
-			this.intelligence = INITIAL_VALUE;
-			this.luck = INITIAL_VALUE;
 			this.ex = INITIAL_VALUE;
+			this.type = "";
 
 			this.job = "";
+			this.jobAndColon = "";
 			this.icon = "";
 			this.queuing = false;
+			this.isMonster = false;
 		}
 	}
 }

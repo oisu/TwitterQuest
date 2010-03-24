@@ -13,7 +13,10 @@ package pktn.model
 		public static function getStatusHtmlLeft(player:PlayerModel):String
 		{
 			var statusHtmlLeft:String;
-			statusHtmlLeft = player.name + "<BR>" + player.job + "<BR>" + Config.STRING_LEVEL + spacePadding(player.lv.toString(), 2);
+			statusHtmlLeft = player.name + "<BR>" +
+			player.job + "<BR>" +
+			player.type + "<BR>" +
+			Config.STRING_LEVEL + spacePadding(player.lv.toString(), 2);
 			return statusHtmlLeft;
 		}
 
